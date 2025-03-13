@@ -285,11 +285,11 @@ C011058 김지원
 
 | Week | Major Tasks |
 |------|-------------|
-| 1    | 개발 환경 및 초기 세팅, PoC, 제안서 작성 및 발표 준비
-| 2    | **Proposal Presentation**, 데이터셋 수집 및 라벨링 확정, 데이터 분포 및 증강 전략 분석
-| 3    | 초기 UI/UX 와이어프레임, 기계학습 환경 설정, YOLOv8 기반 모델 Fine-tuning 시작
-| 4    | 데이터 증강 기법 적용 및 효과 분석(하이퍼파라미터 조정 실험)
-| 5    | Pose Estimation + LSTM을 통한 모델 생성, Cross Validation을 통한 모델 성능 검증
+| 1    | 제안서 초안 작성
+| 2    | 데이터셋 라벨링/관리
+| 3    | 
+| 4    | **Proposal Presentation**
+| 5    | 
 | 6    | 초기 웹 대시보드 Prototyping, AI 모델과 기본 UI 연동 테스트
 | 7    | 중간 발표 준비
 | 8    | **Midterm Presentation**, 모델 추가 학습 및 최적화 진행
