@@ -325,3 +325,63 @@ C011058 김지원
 - 제안 시스템 도입 시, 음주 운전 사고를 단 10%만 줄이더라도 수십억의 재산 피해 방지 및 수십 명의 생명을 살릴 수 있습니다.
 - Edge Computing으롤 저렴하게 서비스를 제공할 수 있다고 하면, 경제적&사회적 모두 이득을 가져올 수 있습니다.
 - 최종적으로, 이 솔루션은 사회적 안전망을 강화하고, 향후 다양한 안전 관리 솔루션으로 확장될 수 있는 탄탄한 기반을 마련하여, 경제적·사회적 ROI 측면에서도 높은 효과를 기대할 수 있습니다.
+
+---
+
+# 1주차 작업 보고서
+
+## 1. Baseline vs Mixup 실험 요약
+
+### Objective
+- **기존 YOLOv8n 모델**에서 Mosaic 증강(**Baseline**)과 **Mixup 증강**이 객체 검출 성능(mAP@0.5, Validation Loss)에 미치는 영향을 비교
+
+### Experimental Setup
+- **모델**: `yolov8n.pt (pretrained)`
+- **데이터**: Roboflow car_driver_seat (5 classes)
+- **Epochs**: 10
+- **이미지 크기**: 640
+- **비교 대상**: Mosaic-only (Baseline) vs Mosaic+Mixup
+- **측정 지표**: mAP@0.5, Validation Loss
+
+### Results
+
+|       Metric       | Baseline (Mosaic) | Mixup (Mosaic+Mixup) | Difference       |
+|:------------------:|:-----------------:|:--------------------:|:----------------:|
+| **Final mAP@0.5**  |      0.835        |        0.852         |  +0.017 *(미미)* |
+| **Final Val Loss** |      2.547        |        2.537         |  -0.010 *(동일)* |
+
+![63EDE4DA-5C4A-4816-9A34-E348993E358E_1_105_c](https://github.com/user-attachments/assets/25d38d53-f9fc-4f2c-9039-32636e47d9a5)
+![5D211575-854C-4EB6-87DB-546E05937B4E](https://github.com/user-attachments/assets/3909d3de-177f-4286-aa96-674967b8ff3e)
+
+- **Conclusion**  
+  - Mixup 증강은 실험 데이터 환경에서 **유의미한 성능 개선 효과 없음**
+  - → **Baseline 유지** 결정
+
+---
+
+## 2. Hyperparameter Tuning (train4 – train7)
+
+### Objective
+- 학습률(**lr**)과 배치 크기(**batch**)의 조합이 최종 mAP와 Validation Loss에 미치는 영향 비교
+
+### Setup
+| Run    | lr      | Batch | Folder              |
+|--------|---------|-------|---------------------|
+| train4 | 0.001   | 4     | `runs/detect/train4` |
+| train5 | 0.001   | 8     | `runs/detect/train5` |
+| train6 | 0.0001  | 4     | `runs/detect/train6` |
+| train7 | 0.0001  | 8     | `runs/detect/train7` |
+
+### Results (Epoch 10 기준)
+| Run    | mAP@0.5 | Val Box Loss | Best? | Comment                |
+|--------|---------|--------------|-------|------------------------|
+| train4 | 0.835   | 0.950        |       | 낮은 성능              |
+| train5 | 0.852   | 0.920        | ✅     | 높은 mAP + 낮은 Loss   |
+| train6 | 0.833   | 0.950        |       | 낮은 성능              |
+| train7 | 0.852   | 0.918        | ✅     | **최고 성능 (선택)**   |
+
+![E50A0A3A-9AC6-413E-BC7B-FC68FE4E69CD](https://github.com/user-attachments/assets/595c1975-28cc-4689-a402-34fc4734d6c5)
+![B7AF0282-79E4-41CF-B74D-FD0806040F6F](https://github.com/user-attachments/assets/71dc7ea2-2fc8-4af7-8d76-a13991a268c5)
+
+> **최종 결론**  
+> - `train7 (lr=0.0001, batch=8)` 이 **최적** 하이퍼파라미터로 확정
