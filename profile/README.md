@@ -385,3 +385,13 @@ C011058 김지원
 
 > **최종 결론**  
 > - `train7 (lr=0.0001, batch=8)` 이 **최적** 하이퍼파라미터로 확정
+
+---
+## Pipeline Test 결과
+
+- **Tracking + Pose 파이프라인 정상 작동 확인**  
+- 테스트 영상(`/content/PXL_20241123_090617530_3fps.mp4`) 158프레임 처리  
+- 총 **4명의 트랙 ID** 생성 → Track 2(6 frames), Track 4(24 frames), Track 10(67 frames), Track 19(13 frames)  
+- 각 ID별 Pose keypoint 시퀀스(최대 90프레임) 정상 수집 → 다음 단계(LSTM) 데이터 준비 완료
+
+---
