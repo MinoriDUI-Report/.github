@@ -285,12 +285,12 @@ C011058 김지원
 
 | Week | Major Tasks |
 |------|-------------|
-| 1    | 제안서 초안 작성
-| 2    | 데이터셋 라벨링/관리
-| 3    | 
-| 4    | **Proposal Presentation**
+| 1    | 프로젝트 계획서 Review
+| 2    | 제안서 초안 작성
+| 3    | 1주차 주간 보고서 작성, Baseline vs Mixup 실험, Hyperparameter Tuning, Tracking + Pose Pipeline Test, 소규모 LSTM 분류
+| 4    | 제안서 발표, 이벤트 감지 로직 구현, Rust PoC, 웹 대시보드 Prototyping
 | 5    | 
-| 6    | 초기 웹 대시보드 Prototyping, AI 모델과 기본 UI 연동 테스트
+| 6    | 
 | 7    | 중간 발표 준비
 | 8    | **Midterm Presentation**, 모델 추가 학습 및 최적화 진행
 | 9    | Edge Device 환경 시뮬레이션 테스트
