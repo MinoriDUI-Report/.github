@@ -1,8 +1,5 @@
-# 음주운전 예방을 위한 주취자 행동 감지 및 차량 접근 분석 시스템
-**MinoriDUI-Report**
-**C011058 김지원**
+![Slide 16_9 - 318](https://github.com/user-attachments/assets/07af0460-8be5-4daf-a738-2a7baaa1a1fb)
 
----
 
 ## 목차
 1. [개요](#개요)  
