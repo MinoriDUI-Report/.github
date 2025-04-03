@@ -38,4 +38,18 @@
 ## 4. 향후 계획
 - **7주차 작업:**  
   - 차량 접근 이벤트 로직 테스트 및 구현  
-  - Edge Device 초기 세팅 준비 (예: Jetson Nano/Xavier 등)
+  - Edge Device 초기 세팅 준비 (예: Jetson Nano)
+
+---
+
+## 5. 추가 조사 내역: Edge Device 및 MicroSD 카드 준비
+
+- **Edge Device 조사:**  
+  - **NVIDIA Jetson Nano**는 저전력, 고성능 GPU(128-core Maxwell) 탑재와 TensorRT 지원을 통해 실시간 딥러닝 추론에 최적화되어 있습니다.  
+  - 소형 폼팩터와 확장 인터페이스(USB 3.0, HDMI, MIPI CSI 등)를 제공하여, 다양한 센서와 주변 장치와 쉽게 연결 가능합니다.
+  
+- **MicroSD 카드 조사:**  
+  - 추천 제품: **렉사 하이퍼포먼스 microSDXC**  
+    - **용량:** 128GB  
+    - **속도:** 최대 읽기 100MB/s, 최대 쓰기 45MB/s, UHS-I 633x 등급  
+  - 이 사양은 Jetson Nano의 운영체제 부팅 및 데이터 I/O에 적합하며, 안정적인 성능과 충분한 저장 용량을 제공합니다.
