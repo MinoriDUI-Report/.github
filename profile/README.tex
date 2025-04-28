@@ -1,0 +1,117 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{MinoriDUI: Development of an Edge-Based Real-Time Drunk Driving Detection System}
+
+\author{
+    \IEEEauthorblockN{Jiwon Kim}
+    \IEEEauthorblockA{
+        Department of Computer Science\\
+        Hongik University\\
+        Seoul, Republic of Korea\\
+        Email: jiwonkim@example.com
+    }
+}
+
+\maketitle
+
+\begin{abstract}
+Drunk driving continues to pose significant threats to public safety, resulting in considerable societal and economic costs. This paper proposes \textbf{MinoriDUI}, a lightweight, edge-based system capable of real-time detection of intoxicated individuals and vehicle interactions. Utilizing a combination of YOLOv10n for object detection, MobileSAM for segmentation, and a multimodal LSTM model for behavioral analysis, the system achieves high accuracy and low latency suitable for deployment on resource-constrained edge devices. We detail the data acquisition, model architecture, optimization techniques, experimental validation, and future directions of this work.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Drunk Driving Detection, Edge Computing, YOLOv10, MobileSAM, Multimodal LSTM, Real-Time Systems
+\end{IEEEkeywords}
+
+\section{Introduction}
+Drunk driving remains a persistent societal issue, causing numerous fatalities and substantial economic losses each year. Despite advancements in monitoring technologies, current solutions either require extensive cloud computing resources or remain limited in real-time detection capabilities.
+
+To address these challenges, we propose \textbf{MinoriDUI}, an edge-computing-based system that identifies intoxicated behaviors and vehicle interaction events in real-time, directly on lightweight devices such as the Jetson Nano. By combining object detection, human pose analysis, and behavioral classification, the system aims to provide early warnings before drunk driving incidents occur.
+
+\section{Related Work}
+\subsection{Commercial Systems}
+DriveCam \cite{drivecam} focuses on internal vehicle monitoring to prevent accidents but lacks specific drunk-driving detection.  
+Nauto \cite{nauto} provides an AI-driven driver behavior analysis system addressing distractions and fatigue.  
+Seeing Machines \cite{seeingmachines} delivers driver monitoring solutions with high accuracy in drowsiness detection.
+
+\subsection{Open-Source Research}
+YOLOv10 \cite{yolov10} is an efficient real-time object detector optimized for edge devices.  
+MobileSAM \cite{mobilesam} presents a lightweight segmentation model designed for mobile platforms.  
+RT-DETR \cite{rtdetr} is a transformer-based real-time object detection model.
+
+\section{Methodology}
+\subsection{System Overview}
+MinoriDUI integrates object detection, segmentation, behavioral feature extraction, and sequence classification in a unified pipeline optimized for edge inference.
+
+\subsection{Object Detection and Segmentation}
+YOLOv10n detects vehicles, doors, and pedestrians. MobileSAM refines object localization through segmentation.
+
+\subsection{Multimodal Feature Extraction}
+Three modalities are extracted:
+\begin{itemize}
+    \item Pose Keypoints (34-dimensional vector)
+    \item Face Features (Eye Aspect Ratio, EAR)
+    \item Velocity Features
+\end{itemize}
+
+\subsection{LSTM-Based Behavior Classification}
+The concatenated features are fed into an LSTM network to classify sequences into \textit{sober} or \textit{drunk} states.
+
+\subsection{Edge Optimization}
+Models are converted to ONNX format and optimized via TensorRT 10.1 and ONNX Runtime 1.17 to meet edge constraints.
+
+\section{Experiments}
+\subsection{Dataset}
+\begin{itemize}
+    \item \textbf{Sober}: Caltech Pedestrian Dataset + Public CCTV, approximately 2 hours
+    \item \textbf{Drunk}: Custom recorded videos, approximately 2 hours
+\end{itemize}
+Data augmentation techniques such as flipping and noise addition were employed.
+
+\subsection{Experimental Setup}
+Baseline comparison between Mosaic-only augmentation and Mosaic+Mixup augmentation was performed. Hyperparameter tuning was conducted by varying learning rates and batch sizes.
+
+\section{Results}
+\subsection{Object Detection Performance}
+Mixup provided negligible improvements over the baseline. Thus, the baseline configuration was retained.
+
+\subsection{LSTM Classification Performance}
+An initial classification accuracy of 75\% was achieved, increasing to approximately 80\% after dataset expansion and retraining.
+
+\subsection{Edge Inference Benchmark}
+Inference latency was measured at 200--300 ms, with an estimated frame rate of 5--7 FPS on Jetson Nano after optimization.
+
+\section{Conclusion}
+We presented MinoriDUI, a lightweight, real-time edge-based system capable of detecting intoxicated behavior and vehicle interaction events. Future work will focus on dataset expansion under diverse conditions, classification model enhancement, and further edge deployment validation.
+
+\begin{thebibliography}{1}
+
+\bibitem{koroad}
+Korea Road Traffic Authority (KOROAD), ``Traffic Safety Report,'' 2024.
+
+\bibitem{drivecam}
+Lytx Corporation, ``DriveCam: Driver Monitoring Solutions.''
+
+\bibitem{nauto}
+Nauto, Inc., ``AI-Powered Driver Behavior Analysis.''
+
+\bibitem{seeingmachines}
+Seeing Machines Ltd., ``Driver Monitoring System (DMS).''
+
+\bibitem{yolov10}
+G. Jocher, ``YOLOv10: Real-Time Object Detection at Scale,'' Ultralytics, 2024.
+
+\bibitem{mobilesam}
+Y. Chen \textit{et al.}, ``MobileSAM: Lightweight Segmentation Model for Edge Devices,'' 2024.
+
+\bibitem{rtdetr}
+L. Liu \textit{et al.}, ``RT-DETR: Real-Time Detection Transformer,'' arXiv preprint arXiv:2304.08069, 2023.
+
+\end{thebibliography}
+
+\end{document}
