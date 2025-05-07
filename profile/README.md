@@ -110,3 +110,66 @@
 - 향후 추가 실험/배포 시 dataset 복제 가능하도록 모든 output dataset export 완료
 
 ---
+
+# 🗓️ 12주차 작업 보고서
+
+## 개요
+
+본 주차에서는 Vision-Language Multimodal 모델인 **MiniGPT-4**의 실험 환경을 구성하고, 실제 pretrained 모델을 기반으로 간단한 inference를 수행하는 데에 중점을 두었다. 이를 통해 향후 feature vector와 연계된 multimodal 입력 실험 기반을 마련하였다.
+
+---
+
+## 주요 작업 내용
+
+### 1. MiniGPT-4 환경 구성
+
+- MiniGPT-4 공식 GitHub 저장소 클론
+- 의존성 설치 (conda 환경 구성 및 `environment.yml` 활용)
+- Python 3.10 이상에서 실행 환경 구축
+- inference 실행을 위한 `demo.py`, `minigpt4_eval.yaml` 등 구성 요소 확인
+
+---
+
+### 2. LLaMA2 7B 모델 다운로드 및 설정
+
+- Hugging Face에서 **meta-llama/Llama-2-7b-chat-hf** 모델에 대한 access 요청 → 승인
+- huggingface_hub 라이브러리를 활용하여 Python으로 로컬에 weight 다운로드
+- 약 20GB 모델 압축 → Google Drive에 업로드
+- Colab에서 압축 해제 및 추론 테스트를 위한 경로 설정
+
+---
+
+### 3. Colab 환경에서 모델 실행
+
+- Google Drive에 업로드한 모델 zip 파일 마운트 및 압축 해제
+- config 파일(`minigpt4_llama2_eval.yaml`) 내 weight 경로 수정
+- `demo.py` 실행을 통해 이미지 기반 prompt에 대한 응답 출력 확인
+- A100 GPU 환경에서 정상 작동 및 응답 확인
+
+---
+
+## 결과물
+
+- MiniGPT-4 환경 정상 구축
+- LLaMA2 모델 로드 및 Colab 연동 완료
+- 간단한 이미지 기반 inference 성공
+- 향후 커스터마이징 및 feature vector 연동을 위한 기반 확보
+
+---
+
+## 특이사항
+
+- Hugging Face 모델 접근 권한 신청 → 승인까지 수시간 ~ 1일 소요
+- 모델 크기(20GB+)로 인해 로컬 ↔ Colab 간 압축 및 전송 시간이 다소 소요됨
+- 로컬에서는 GPU 성능 제한으로 inference 어려움 → Colab (A100 환경) 권장
+
+---
+
+## ✅ 다음 주 계획 (13주차)
+
+1. 기존 pose/face/velocity feature vector를 활용한 **multimodal input 구조 설계**
+2. MiniGPT-4 encoder의 입력 구조를 분석하여 feature vector와 연동 실험 진행
+3. baseline zero-shot inference 결과 분석 → fine-tuning 필요 여부 검토
+4. 추론 속도/성능 기준으로 edge deployment 가능성 검토
+
+---
