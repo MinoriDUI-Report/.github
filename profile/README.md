@@ -2,7 +2,7 @@
 
 ## 개요
 
-본 주차에서는 기존 데이터 전처리 파이프라인 및 feature extraction 과정의 전면적인 개선을 수행하였다. 또한 모델 성능을 향상시키기 위해 최신 object detection 및 segmentation 모델을 기존 pipeline에 새롭게 도입하였다. 이를 통해 downstream task에서 사용할 수 있는 더 정확하고 일관된 feature vector를 확보하고, 향후 multimodal 모델 입력 데이터의 품질을 높이는 기반을 마련하고자 했다.
+본 주차에서는 기존 데이터 전처리 파이프라인 및 feature extraction 과정의 전면적인 개선을 수행하였다. 또한 모델 성능을 향상시키기 위해 최신 object detection 및 segmentation 모델을 기존 pipeline에 새롭게 도입하였다. 이를 통해 downstream task에서 사용할 수 있는 더 정확하고 일관된 feature vector를 확보하고, 향후 multimodal 모델 입력 데이터의 품질을 높이는 기반을 마련하고자 했다. 또한, Vision-Language Multimodal 모델인 **MiniGPT-4**의 실험 환경을 구성하고, 실제 pretrained 모델을 기반으로 간단한 inference를 수행하는 데에 중점을 두었다. 이를 통해 향후 feature vector와 연계된 multimodal 입력 실험 기반을 마련하였다.
 
 ## 주요 작업 내용
 
@@ -36,6 +36,27 @@
 - 최종적으로 pose + face + velocity를 합친 시퀀스 dataset(`augmented.npz`)을 생성하였다.
 - 추가적으로 dataset integrity 확인을 위한 **feature completeness/validity check script**를 작성하여 각 sample별 feature file 존재 여부 및 데이터 유효성을 자동 검증하였다.
 
+### 4. MiniGPT-4 환경 구성
+
+- MiniGPT-4 공식 GitHub 저장소 클론
+- 의존성 설치 (conda 환경 구성 및 `environment.yml` 활용)
+- Python 3.10 이상에서 실행 환경 구축
+- inference 실행을 위한 `demo.py`, `minigpt4_eval.yaml` 등 구성 요소 확인
+
+### 5. LLaMA2 7B 모델 다운로드 및 설정
+
+- Hugging Face에서 **meta-llama/Llama-2-7b-chat-hf** 모델에 대한 access 요청 → 승인
+- huggingface_hub 라이브러리를 활용하여 Python으로 로컬에 weight 다운로드
+- 약 20GB 모델 압축 → Google Drive에 업로드
+- Colab에서 압축 해제 및 추론 테스트를 위한 경로 설정
+
+### 6. Colab 환경에서 모델 실행
+
+- Google Drive에 업로드한 모델 zip 파일 마운트 및 압축 해제
+- config 파일(`minigpt4_llama2_eval.yaml`) 내 weight 경로 수정
+- `demo.py` 실행을 통해 이미지 기반 prompt에 대한 응답 출력 확인
+- A100 GPU 환경에서 정상 작동 및 응답 확인
+
 ---
 
 ## 결과물
@@ -46,23 +67,10 @@
 - `augmented.npz` (pose + face + velocity 통합 시퀀스 dataset) 생성 완료
 - integrity check 결과 → feature 파일 존재 여부 및 각 feature vector length CSV (`feature_integrity_check.csv`) 출력 완료
 - downstream model (예: LSTM, MiniGPT-4 등) 입력용 데이터셋 준비 완료
-
----
-
-## 다음 주 계획 (예상)
-
-1. **MiniGPT-4 환경 구축 및 pretrained weight 다운로드**
-    - 공식 GitHub repository clone
-    - 의존성 설치 (requirements.txt, transformers, bitsandbytes 등)
-    - pretrained checkpoint 다운로드 및 로드 테스트
-2. **multimodal input 연결 테스트**
-    - 기존 feature vector → MiniGPT-4 input으로 매핑 시도
-    - 단일 이미지 caption inference → feature embedding 추가 → multimodal input pipeline 검증
-3. **baseline inference → fine-tuning 여부 검토**
-    - zero-shot inference baseline 결과 평가
-    - 필요 시 instruction-following dataset 준비 → fine-tuning 계획 수립
-4. **Edge inference 적용 방향성 검토**
-    - training → server-side inference → model quantization or distillation → edge deployment 가능성 분석
+- MiniGPT-4 환경 정상 구축
+- LLaMA2 모델 로드 및 Colab 연동 완료
+- 간단한 이미지 기반 inference 성공
+- 향후 커스터마이징 및 feature vector 연동을 위한 기반 확보
 
 ---
 
@@ -80,26 +88,21 @@
 
 ---
 
-## 향후 계획 (12~14주차 예상)
+## 향후 계획
 
-### **12주차: MiniGPT-4 baseline inference 및 feature mapping 실험**
-- MiniGPT-4 환경 설정 및 pretrained weight 테스트
-- 단일 이미지 caption inference baseline 수행
-- 기존 feature vector → multimodal input으로 연결 실험 (feature embedding or auxiliary input 방식 검증)
-- inference latency, output 품질, 메모리 footprint 측정 → edge device 호환성 초안 작성
+### **12주차: LSTM 학습 및 전처리 파이프라인 구축**
+- `augmented.npz` 기반 LSTM 학습 (PyTorch → ONNX 변환)
+- `.mp4` 영상 → 프레임 기반 feature 추출
+    - YOLOv10n + MobileSAM → pose / ear / velocity
+- sliding window 적용 후 LSTM ONNX 모델로 추론 실행
 
-### **13주차: fine-tuning 데이터셋 구축 및 학습 실험**
-- instruction-following dataset 생성 or external dataset 수집
-- fine-tuning pipeline 구축 (LoRA, full fine-tuning 여부 검토)
-- subset dataset으로 소규모 fine-tuning test
-- baseline → fine-tuned model 성능 비교
+## 🔧 13주차: 결과 시각화 및 데모 개발
+- drunk / sober 결과를 영상에 overlay
+- `.mp4`로 결과 영상 생성 or Streamlit 기반 데모 UI 구성
 
-### **14주차: Edge deployment feasibility study**
-- Jetson Nano 환경에서 model inference 테스트
-    - quantization, pruning 적용 여부 실험
-- inference API latency vs on-device inference latency 비교
-- 최종 multimodal pipeline (YOLOv10n + MobileSAM + MiniGPT-4) end-to-end 평가
-- 필요 시 fallback model (LSTM or lightweight classifier) 성능 비교
+## 🔧 14주차: 마무리 및 시연 준비
+- 전체 코드 정리 및 문서화
+- Streamlit 또는 Flask 기반 웹 인터페이스 개발
 
 ---
 
@@ -108,68 +111,5 @@
 - 전체 dataset의 feature file 상태를 자동 검증하여 문제 sample 사전 파악
 - feature extraction, augmentation, integrity check code에 대한 backup 및 documentation 작성 완료
 - 향후 추가 실험/배포 시 dataset 복제 가능하도록 모든 output dataset export 완료
-
----
-
-# 🗓️ 12주차 작업 보고서
-
-## 개요
-
-본 주차에서는 Vision-Language Multimodal 모델인 **MiniGPT-4**의 실험 환경을 구성하고, 실제 pretrained 모델을 기반으로 간단한 inference를 수행하는 데에 중점을 두었다. 이를 통해 향후 feature vector와 연계된 multimodal 입력 실험 기반을 마련하였다.
-
----
-
-## 주요 작업 내용
-
-### 1. MiniGPT-4 환경 구성
-
-- MiniGPT-4 공식 GitHub 저장소 클론
-- 의존성 설치 (conda 환경 구성 및 `environment.yml` 활용)
-- Python 3.10 이상에서 실행 환경 구축
-- inference 실행을 위한 `demo.py`, `minigpt4_eval.yaml` 등 구성 요소 확인
-
----
-
-### 2. LLaMA2 7B 모델 다운로드 및 설정
-
-- Hugging Face에서 **meta-llama/Llama-2-7b-chat-hf** 모델에 대한 access 요청 → 승인
-- huggingface_hub 라이브러리를 활용하여 Python으로 로컬에 weight 다운로드
-- 약 20GB 모델 압축 → Google Drive에 업로드
-- Colab에서 압축 해제 및 추론 테스트를 위한 경로 설정
-
----
-
-### 3. Colab 환경에서 모델 실행
-
-- Google Drive에 업로드한 모델 zip 파일 마운트 및 압축 해제
-- config 파일(`minigpt4_llama2_eval.yaml`) 내 weight 경로 수정
-- `demo.py` 실행을 통해 이미지 기반 prompt에 대한 응답 출력 확인
-- A100 GPU 환경에서 정상 작동 및 응답 확인
-
----
-
-## 결과물
-
-- MiniGPT-4 환경 정상 구축
-- LLaMA2 모델 로드 및 Colab 연동 완료
-- 간단한 이미지 기반 inference 성공
-- 향후 커스터마이징 및 feature vector 연동을 위한 기반 확보
-
----
-
-## 특이사항
-
-- Hugging Face 모델 접근 권한 신청 → 승인까지 수시간 ~ 1일 소요
-- 모델 크기(20GB+)로 인해 로컬 ↔ Colab 간 압축 및 전송 시간이 다소 소요됨
-- 로컬에서는 GPU 성능 제한으로 inference 어려움 → Colab (A100 환경) 권장
-
----
-
-## ✅ 다음 주 계획 (13주차)
-
-1. 기존 pose/face/velocity feature vector를 활용한 **multimodal input 구조 설계**
-2. MiniGPT-4 encoder의 입력 구조를 분석하여 feature vector와 연동 실험 진행
-3. baseline zero-shot inference 결과 분석 → fine-tuning 필요 여부 검토
-4. 추론 속도/성능 기준으로 edge deployment 가능성 검토
 
 ---
