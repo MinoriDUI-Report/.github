@@ -36,14 +36,7 @@
 - export된 ONNX 모델로 분류 실행
 - 결과는 `per-window prediction` 형태로 시각화됨
 
-예시 시각화 (drunk 예측):
-![Drunk 예측 시각화](./images/drunk_sample.jpeg)
 
-예시 시각화 (sober 예측):
-![Sober 예측 시각화](./images/sober_sample.jpeg)
-
-예시 시각화 (부분 혼합):
-![혼합 예측 시각화](./images/mixed_sample.jpeg)
 
 ---
 
@@ -52,14 +45,17 @@
 - **drunk_01**:
   - Drunk ratio: **0.90**
   - 대부분의 window에서 drunk로 예측됨
+![myplot3](https://github.com/user-attachments/assets/c9c6d781-26e3-4fbb-a9f2-64c14bded886)
 
 - **sober_02**:
   - Drunk ratio: **0.00**
   - 전 window에서 sober로 예측됨
+![myplot2](https://github.com/user-attachments/assets/4ae665d5-ff54-4a11-81cb-2c9f5052f99d)
 
 - **sober_01**:
   - Drunk ratio: **1.00**
   - 이상치 발생 → 원본 feature 확인 필요
+![myplot](https://github.com/user-attachments/assets/183264e9-98ed-46f2-8717-f6a3e8a67dae)
 
 ---
 
